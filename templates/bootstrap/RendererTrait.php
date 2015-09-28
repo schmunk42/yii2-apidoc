@@ -42,7 +42,7 @@ trait RendererTrait
             return $types;
         }
 
-        return $this->filterTypes($types, $type->name);
+        return $this->filterTypes($types, $this->getTypeCategory($type));
     }
 
     /**
@@ -52,20 +52,13 @@ trait RendererTrait
      */
     protected function getTypeCategory($type)
     {
-        $extensions = $this->extensions;
         $navClasses = 'app';
         if (isset($type)) {
-            if ($type->name == 'Yii') {
-                $navClasses = 'yii';
-            } elseif (strncmp($type->name, 'yii\\', 4) == 0) {
-                $navClasses = 'yii';
-                $subName = substr($type->name, 4);
-                if (($pos = strpos($subName, '\\')) !== false) {
-                    $subNamespace = substr($subName, 0, $pos);
-                    if (in_array($subNamespace, $extensions)) {
-                        $navClasses = $subNamespace;
-                    }
-                }
+            $parts = explode('\\',$type->name);
+            if ($parts[0] == 'app') {
+                $navClasses = $parts[0];
+            } else {
+                $navClasses = $parts[0].'\\'.$parts[1];
             }
         }
         return $navClasses;
