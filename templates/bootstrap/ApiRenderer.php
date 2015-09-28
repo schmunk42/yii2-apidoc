@@ -11,6 +11,7 @@ use Yii;
 use yii\apidoc\helpers\ApiIndexer;
 use yii\helpers\Console;
 use yii\helpers\FileHelper;
+use yii\helpers\VarDumper;
 
 /**
  *
@@ -70,12 +71,12 @@ class ApiRenderer extends \yii\apidoc\templates\html\ApiRenderer
                 'readme' => null,
             ]);
         } else {
-            $readme = @file_get_contents("https://raw.github.com/yiisoft/yii2-framework/master/README.md");
+            /*$readme = @file_get_contents("https://raw.github.com/yiisoft/yii2-framework/master/README.md");
             $indexFileContent = $this->renderWithLayout($this->indexView, [
                 'docContext' => $context,
                 'types' => $yiiTypes,
                 'readme' => $readme ?: null,
-            ]);
+            ]);*/
         }
         file_put_contents($targetDir . '/index.html', $indexFileContent);
 
@@ -104,21 +105,12 @@ class ApiRenderer extends \yii\apidoc\templates\html\ApiRenderer
         }
 
         switch ($this->getTypeCategory($type)) {
-            case 'yii':
-                $baseUrl = 'https://github.com/yiisoft/yii2/blob/master';
-                if ($type->name == 'Yii') {
-                    $url = "$baseUrl/framework/Yii.php";
-                } else {
-                    $url = "$baseUrl/framework/" . str_replace('\\', '/', substr($type->name, 4)) . '.php';
-                }
-                break;
-            case 'app':
-                return null;
             default:
-                $parts = explode('\\', substr($type->name, 4));
+                return null;
+/*                $parts = explode('\\', substr($type->name, 4));
                 $ext = $parts[0];
                 unset($parts[0]);
-                $url = "https://github.com/yiisoft/yii2-$ext/blob/master/" . implode('/', $parts) . '.php';
+                $url = "https://github.com/yiisoft/yii2-$ext/blob/master/" . implode('/', $parts) . '.php';*/
                 break;
         }
 

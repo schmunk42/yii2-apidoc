@@ -8,6 +8,7 @@
 namespace yii\apidoc\templates\bootstrap;
 
 use yii\apidoc\models\TypeDoc;
+use yii\helpers\StringHelper;
 
 /**
  * Common methods for renderers
@@ -38,7 +39,7 @@ trait RendererTrait
             return $types;
         }
 
-        return $this->filterTypes($types, $this->getTypeCategory($type));
+        return $this->filterTypes($types, $type->name);
     }
 
     /**
@@ -77,34 +78,17 @@ trait RendererTrait
     protected function filterTypes($types, $navClasses)
     {
         switch ($navClasses) {
-            case (true):
-                $types = array_filter($types, function ($val) use ($navClasses) {
-                    $class = str_replace('_','\\',$navClasses);
-                    return strncmp($val->name, $class, 15) === 0;
-                });
             case 'app':
                 $types = array_filter($types, function ($val) {
-                    return strncmp($val->name, 'yii\\', 4) !== 0;
-                });
-                break;
-            case 'yii':
-                $self = $this;
-                $types = array_filter($types, function ($val) use ($self) {
-                    if ($val->name == 'Yii') {
-                        return true;
-                    }
-                    if (strlen($val->name) < 5) {
-                        return false;
-                    }
-                    $subName = substr($val->name, 4, strpos($val->name, '\\', 5) - 4);
-
-                    return strncmp($val->name, 'yii\\', 4) === 0 && !in_array($subName, $self->extensions);
+                    return strncmp($val->name, 'app\\', 4) === 0;
                 });
                 break;
             default:
                 $types = array_filter($types, function ($val) use ($navClasses) {
-                    return strncmp($val->name, "yii\\$navClasses\\", strlen("yii\\$navClasses\\")) === 0;
+                    $class = str_replace('_','\\',$navClasses);
+                    return strncmp($val->name, $class, strlen($class)) === 0;
                 });
+                break;
         }
 
         return $types;
