@@ -18,23 +18,12 @@ trait RendererTrait
      * @var array official Yii extensions
      */
     public $extensions = [
-        'apidoc',
-        'authclient',
-        'bootstrap',
-        'codeception',
-        'composer',
-        'debug',
-        'elasticsearch',
-        'faker',
-        'gii',
-        'imagine',
-        'jui',
-        'mongodb',
-        'redis',
-        'smarty',
-        'sphinx',
-        'swiftmailer',
-        'twig',
+        'schmunk42_giiant',
+        'schmunk42_markdocs-module',
+        'codemix_localeurls',
+        'codemix_streamlog',
+        'onebase_core',
+        'ext_diemeisterei',
     ];
 
     /**
@@ -75,7 +64,6 @@ trait RendererTrait
                 }
             }
         }
-
         return $navClasses;
     }
 
@@ -89,6 +77,11 @@ trait RendererTrait
     protected function filterTypes($types, $navClasses)
     {
         switch ($navClasses) {
+            case (true):
+                $types = array_filter($types, function ($val) use ($navClasses) {
+                    $class = str_replace('_','\\',$navClasses);
+                    return strncmp($val->name, $class, 15) === 0;
+                });
             case 'app':
                 $types = array_filter($types, function ($val) {
                     return strncmp($val->name, 'yii\\', 4) !== 0;

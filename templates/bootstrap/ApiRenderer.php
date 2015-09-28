@@ -50,7 +50,9 @@ class ApiRenderer extends \yii\apidoc\templates\html\ApiRenderer
         }
 
         foreach ($extTypes as $ext => $extType) {
-            $readme = @file_get_contents("https://raw.github.com/yiisoft/yii2-$ext/master/README.md");
+            $extPath = reset($extType)->sourceFile;
+            preg_match('|(vendor/[a-z0-9-]*/[a-z0-9-]*)/|', $extPath, $matches);
+            $readme = @file_get_contents($matches[0]."/README.md");
             $indexFileContent = $this->renderWithLayout($this->indexView, [
                 'docContext' => $context,
                 'types' => $extType,
