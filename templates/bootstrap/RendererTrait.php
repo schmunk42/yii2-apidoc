@@ -19,12 +19,15 @@ trait RendererTrait
      * @var array official Yii extensions
      */
     public $extensions = [
+        'dmstr_modules_pages',
         'schmunk42_giiant',
         'schmunk42_markdocs-module',
         'codemix_localeurls',
         'codemix_streamlog',
         'onebase_core',
         'ext_diemeisterei',
+        'yii_gii',
+        'app' // TODO: remove this workaround for app module detection
     ];
 
     /**
