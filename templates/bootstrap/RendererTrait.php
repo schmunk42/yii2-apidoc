@@ -9,6 +9,7 @@ namespace yii\apidoc\templates\bootstrap;
 
 use yii\apidoc\models\TypeDoc;
 use yii\helpers\StringHelper;
+use yii\helpers\VarDumper;
 
 /**
  * Common methods for renderers
@@ -19,15 +20,19 @@ trait RendererTrait
      * @var array official Yii extensions
      */
     public $extensions = [
-        'dmstr_modules_pages',
-        'schmunk42_giiant',
-        'schmunk42_markdocs-module',
-        'codemix_localeurls',
-        'codemix_streamlog',
-        'onebase_core',
-        'ext_diemeisterei',
-        'yii_gii',
-        'app' // TODO: remove this workaround for app module detection
+        '@vendor/dmstr/yii2-bootstrap',
+        '@vendor/schmunk42/yii2-giiant',
+        '@vendor/schmunk42/yii2-markdocs-module',
+        '@app/extensions/diemeisterei',
+        '@vendor/codemix/yii2-localeurls',
+        '@vendor/codemix/yii2-streamlog',
+        '@vendor/dmstr/yii2-pages-module',
+        '@vendor/dmstr/yii2-widgets-module',
+        '@vendor/dmstr/yii2-helpers',
+        '@vendor/dmstr/yii2-db',
+        '@vendor/dmstr/yii2-migrate-command',
+        '@vendor/dmstr/yii2-yaml-converter-command',
+        '@vendor/rmrevin/yii2-fontawesome'
     ];
 
     /**
@@ -80,13 +85,14 @@ trait RendererTrait
                 });
                 break;
             default:
-                $types = array_filter($types, function ($val) use ($navClasses) {
-                    $class = str_replace('_','\\',$navClasses);
-                    return strncmp($val->name, $class, strlen($class)) === 0;
+                $types = array_filter($types, function ($type) use ($navClasses) {
+                    \Yii::setAlias('@ext','/app/src/extensions');
+                    \Yii::setAlias('@vendor','/app/vendor');
+                    $path = str_replace('/app/','', realpath(\Yii::getAlias($navClasses)));
+                    return strncmp($type->sourceFile, $path, strlen($path)) === 0;
                 });
                 break;
         }
-
         return $types;
     }
 }

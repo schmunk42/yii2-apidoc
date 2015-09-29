@@ -59,7 +59,12 @@ class ApiRenderer extends \yii\apidoc\templates\html\ApiRenderer
                 'types' => $extType,
                 'readme' => $readme ?: null,
             ]);
-            file_put_contents($targetDir . "/ext-{$ext}-index.html", $indexFileContent);
+            $file = dirname(str_replace('@','',$extPath));
+            $file = str_replace('/','_',$file);
+            $parts = explode('_',$file);
+            $pageName = $parts[0].'_'.$parts[1].'_'.$parts[2];
+
+            file_put_contents($targetDir . "/ext-{$pageName}-index.html", $indexFileContent);
         }
 
         $yiiTypes = $this->filterTypes($types, 'yii');

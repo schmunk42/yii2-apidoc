@@ -60,9 +60,14 @@ $this->beginPage();
         if (!empty($this->context->extensions)) {
             $extItems = [];
             foreach ($this->context->extensions as $ext) {
+                $file = str_replace('@','',$ext);
+                $file = str_replace('/','_',$file);
+                $parts = explode('_',$file);
+                $pageName = $parts[0].'_'.$parts[1].'_'.$parts[2];
+
                 $extItems[] = [
                     'label' => $ext,
-                    'url' => "./ext-{$ext}-index.html",
+                    'url' => "./ext-{$pageName}-index.html",
                 ];
             }
             $nav[] = ['label' => 'Extensions', 'items' => $extItems];
